@@ -1,6 +1,6 @@
-# Grammar-constrained decoding demo
+# Grammar-constrained decoding
 
-Option 1 from the final project. The language is a signup line:
+Option 1 from the final project. A legal signup line looks like:
 
 ```
 name=maya grade=10 club=robotics
@@ -14,19 +14,35 @@ pip install -r requirements.txt
 python3 demo.py
 ```
 
-`python3 demo.py 1` runs the first sentence only.
-`demo.ipynb` runs the same comparison and prints the configuration.
+`demo.ipynb` runs the same comparison and saves the printed configuration.
+`results.json` stores every line and the summary counts.
 `report.pdf` is the write-up.
 
 The first run downloads `Qwen/Qwen2.5-0.5B-Instruct` (about 1 GB).
-After that, ten sentences takes about half a minute on a CPU.
+The full run is 50 sentences in four conditions.
 
-## What is held fixed
+## Data
 
-The baseline is the same model, the same prompts, and the same greedy
-decoding. The only difference is that the grammar mask is turned off.
+- 25 standard sentences, all phrased like "Maya is in grade 10 and wants the robotics club."
+- 25 held-out sentences with different word order and extra details that should be ignored.
+- The 1-shot example is not in either split: "Alex is in grade 7 and wants the music club."
 
-## The number
+## Conditions
 
-Semantic accuracy: does the line have the right name, grade, and club?
-Ten sentences. A second number is average generation time.
+All four runs use `Qwen/Qwen2.5-0.5B-Instruct`, greedy decoding (`do_sample=False`), `max_new_tokens=32`, and seed 0.
+
+Inside one prompt, the grammar mask is the only change.
+The 0-shot prompt and the 1-shot prompt differ by that one example.
+
+## Semantic accuracy from `demo.ipynb`
+
+Correct means the line parses and the name, grade, and club match.
+
+| Prompt | Decoding | Standard | Held-out | Overall | Avg seconds |
+| --- | --- | --- | --- | --- | --- |
+| 0-shot | baseline | 0/25 | 0/25 | 0/50 | 0.8 |
+| 0-shot | constrained | 16/25 | 12/25 | 28/50 | 1.3 |
+| 1-shot | baseline | 22/25 | 11/25 | 33/50 | 0.6 |
+| 1-shot | constrained | 22/25 | 13/25 | 35/50 | 1.5 |
+
+`force_finish` ran 0 times. Every constrained line parsed. The 1-shot standard outputs are the same with the mask on or off.
