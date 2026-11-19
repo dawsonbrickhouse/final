@@ -15,6 +15,8 @@ python3 demo.py
 ```
 
 `python3 demo.py 1` runs the first sentence only.
+`demo.ipynb` runs the same comparison and prints the configuration.
+`report.pdf` is the write-up.
 
 The first run downloads `Qwen/Qwen2.5-0.5B-Instruct` (about 1 GB).
 After that, ten sentences takes about half a minute on a CPU.

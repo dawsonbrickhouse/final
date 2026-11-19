@@ -168,10 +168,9 @@ def generate_line(model, tokenizer, prompt_ids, pieces, eos_ids, constrained):
     return text, elapsed, forced
 
 
-def main():
-    limit = len(PROBLEMS)
-    if len(sys.argv) > 1:
-        limit = int(sys.argv[1])
+def main(limit=None):
+    if limit is None:
+        limit = len(PROBLEMS)
     problems = PROBLEMS[:limit]
 
     for sentence, name, grade, club in problems:
@@ -243,4 +242,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    chosen = int(sys.argv[1]) if len(sys.argv) > 1 else None
+    main(chosen)
